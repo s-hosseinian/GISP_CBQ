@@ -1,4 +1,4 @@
-#### Extension of the CBQ Algorithm
+#### Extensions of the CBQ Algorithm
 
 # Algorithms for GISP based on a Quadratic Optimization Approach
 
