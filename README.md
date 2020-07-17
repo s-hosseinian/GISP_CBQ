@@ -2,7 +2,7 @@
 
 # Algorithms for GISP based on a Quadratic Optimization Approach
 
-This respiratory contains the code accompanying the following paper:
+This repository contains the code accompanying the following paper:
 
 > **S. Hosseinian and S. Butenko. [Algorithms for the Generalized Independent Set Problem based on a Quadratic Optimization Approach.](https://doi.org/10.1007/s11590-019-01418-9) _Optimization Letters (2019) 13: 1211-1222_**
 
