@@ -64,22 +64,22 @@ double get_cpu_time() {
 
 #pragma region "Heuristic"
 
-struct elm {									//keeps a "index-value" pairs, used for sorting "indices" based on "values"
+struct elm {
 	int n;
 	double val;
 };
 
-bool ValueCmp(elm const & a, elm const & b)		//comparison method based on "value" attribute of a "index-value" pair (i.e. elm)
+bool ValueCmp(elm const & a, elm const & b)
 {
 	return a.val > b.val;
 }
 
-struct clq {									//clique: keeps list of vertices as well as the clique's total edge weight
+struct clq {
 	vector<int> vertexList;
 	double weight;
 };
 
-double* makeQ(double * verW, double **Adj, int const & N) {					//generates the upper-triangle part of matrix Q, and puts it in a 1-d array to be used in the eigen-decomposition algorithm
+double* makeQ(double * verW, double **Adj, int const & N) {
 	double** Q = new double*[N];
 	for (int i = 0; i < N; i++) {
 		Q[i] = new double[N];
@@ -108,7 +108,7 @@ double* makeQ(double * verW, double **Adj, int const & N) {					//generates the 
 	return Q_a;
 }
 
-clq extractClique(double * verW, double **Adj_fix, double** Adj, vector<elm> & EVec, int const & N) {		//extracts clique based on a sorted list of "index-value" pair (will be used to extract clique based on a sorted eigenvector)
+clq extractClique(double * verW, double **Adj_fix, double** Adj, vector<elm> & EVec, int const & N) {
 	clq clique;
 	clique.vertexList.push_back(EVec[0].n);
 	clique.weight = verW[EVec[0].n];
@@ -134,7 +134,7 @@ clq extractClique(double * verW, double **Adj_fix, double** Adj, vector<elm> & E
 	return clique;
 }
 
-double CCH(double * verW, double **Adj_fix, double **Adj, int const & N)		// The base heuristic method
+double CCH(double * verW, double **Adj_fix, double **Adj, int const & N)	// The base heuristic method
 {
 	double* Q_a = makeQ(verW, Adj, N);
 	double* lambda = new double[N];
@@ -236,7 +236,7 @@ clq extractClique_DP(double* verNeiW, double** vAdj_fix, double** vAdj, vector<e
 	return clique;
 }
 
-double CCH_DP(double * verW, double **Adj_fix, double **Adj, int const & N)		// the CCH heuristic method in a dynamic programming setting
+double CCH_DP(double * verW, double **Adj_fix, double **Adj, int const & N)	// the CCH heuristic method in a "Closed Neighborhood" setting
 {
 	double BestWeight = 0;
 	Concurrency::parallel_for(0, N, [&](int v) {
@@ -339,8 +339,8 @@ void print_matrix(char* desc, MKL_INT m, MKL_INT n, double* a, MKL_INT lda) {	//
 
 struct node {
 	int n;
-	int degree;			//degree of the vertex in the subgraph induced by R (changing as R is updated)
-	int ex_deg;			//sum of "degree" of the vertices adjacent to this vertex in the subgraph induced by R (See definition of ex_deg(q) in Tomita(2007) page 101)
+	int degree;
+	int ex_deg;
 };
 
 bool degCmp(node const & a, node const & b)
@@ -353,7 +353,7 @@ bool ex_degCmp(node const & a, node const & b)
 	return a.ex_deg < b.ex_deg;
 }
 
-int* sortV(double** Adj, int & Delta, int const & N) {			//sorts the vertices based on "degree" and "ex_degree" (See definition of ex_deg(q) in Tomita(2007) page 101)
+int* sortV(double** Adj, int & Delta, int const & N) {
 	int* V = new int[N];
 	vector<node> R;
 	vector<node> Rmin;
@@ -372,8 +372,8 @@ int* sortV(double** Adj, int & Delta, int const & N) {			//sorts the vertices ba
 		}
 		R.push_back(v);
 	}
-	Delta = dlt;								//inputs Delta and change its value in the function after calculating the degree of all vertices
-	sort(R.begin(), R.end(), degCmp);			//Sorts "node"s in R in a decreasing order "degree"
+	Delta = dlt;
+	sort(R.begin(), R.end(), degCmp);
 	int minDeg = (R.end() - 1)->degree;
 	vector<node>::iterator itr = R.end() - 1;
 	while (itr->degree == minDeg) {
@@ -385,7 +385,7 @@ int* sortV(double** Adj, int & Delta, int const & N) {			//sorts the vertices ba
 			itr--;
 		}
 	}
-	node p;										//The "node" with the minimum "ex_deg" among nodes in Rmin
+	node p;	
 	for (int k = N - 1; k >= 0; k--) {
 		if (Rmin.size() == 1) {
 			p = Rmin[0];
@@ -399,7 +399,7 @@ int* sortV(double** Adj, int & Delta, int const & N) {			//sorts the vertices ba
 					}
 				}
 			}
-			sort(Rmin.begin(), Rmin.end(), ex_degCmp);				//Sorts "node"s in Rmin in an increasing order "ex_deg"
+			sort(Rmin.begin(), Rmin.end(), ex_degCmp);
 			p = Rmin[0];
 		}
 		V[k] = p.n;
@@ -444,7 +444,7 @@ struct vertex {
 };
 
 class Equation {
-public:										//lam, b_p, q_p are parameters of the eqution
+public:		//lam, b_p, q_p are parameters of the eqution
 	vector<double> lam;
 	vector<double> b_p;
 	vector<double> q_p;
@@ -452,7 +452,7 @@ public:										//lam, b_p, q_p are parameters of the eqution
 public:
 	Equation(vector<double> _lambda, vector<double> _b_p, vector<double> _q_p, double _m) :lam(_lambda), b_p(_b_p), q_p(_q_p), m(_m) {}
 
-	double evalFunc(double x) {				//evaluates function value at point x
+	double evalFunc(double x) {	//evaluates function value at point x
 		double f = -m / 4;
 		double num;
 		double denum;
@@ -464,7 +464,7 @@ public:
 		return f;
 	}
 
-	double root(double a, double b) {		//finds the root of a monotonic function in the interval [a,b]
+	double root(double a, double b) {	//finds the root of a monotonic function in the interval [a,b]
 		double c = a;
 		double fa = evalFunc(a);
 		double fb = evalFunc(b);
@@ -510,7 +510,7 @@ public:
 	}
 };
 
-double* makeQ_L(double** adj, int m) {			//generates the upper_triangle part of the matrix Q_L, and puts it a 1-d array to be used in the eigen-decomposition algorithm
+double* makeQ_L(double** adj, int m) {	//generates the upper_triangle part of the matrix Q_L, and puts it a 1-d array to be used in the eigen-decomposition algorithm
 	double** Q_L = new double*[m];
 	for (int i = 0; i < m; i++) {
 		Q_L[i] = new double[m];
@@ -799,7 +799,7 @@ int main()
 				Adj_rem[t - 1][s - 1] = weigh;
 			}
 		}
-		for (int i = 0; i < N; i++) {							//Make Adj the "weighted" adjacency matrix of the graph
+		for (int i = 0; i < N; i++) {	//Make Adj the "weighted" adjacency matrix of the graph
 			for (int j = 0; j < N; j++) {
 				if (Adj[i][j] != 0) {
 					if (Adj_fix[i][j] == 1) {
@@ -811,7 +811,7 @@ int main()
 				}
 			}
 		}
-		for (int i = 0; i < N; i++) {							//Hereafter, Adj_fix will be the adjacency matrix of the complement of G1=(V,E1), where E1 is the set of fixed edges
+		for (int i = 0; i < N; i++) {	//Hereafter, Adj_fix will be the adjacency matrix of the complement of G1=(V,E1), where E1 is the set of fixed edges
 			for (int j = 0; j < N; j++) {
 				if (i != j) {
 					if (Adj_fix[i][j] == 1) Adj_fix[i][j] = 0;
