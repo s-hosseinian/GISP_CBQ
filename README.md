@@ -4,7 +4,7 @@
 
 This repository contains the code accompanying the following paper:
 
-> **S. Hosseinian and S. Butenko. [Algorithms for the Generalized Independent Set Problem based on a Quadratic Optimization Approach.](https://doi.org/10.1007/s11590-019-01418-9) _Optimization Letters (2019) 13: 1211-1222_**
+> **S. Hosseinian and S. Butenko. [Algorithms for the Generalized Independent Set Problem based on a Quadratic Optimization Approach.](https://doi.org/10.1007/s11590-019-01418-9) _Optimization Letters 13.6 (2019) 1211-1222_.**
 
 Citation:
 
